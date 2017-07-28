@@ -23,7 +23,10 @@ responseCurrent = apiRequestOpen(timeEntryUrl)
 timeEntryJson = json.load(responseCurrent)
 projectId = str(timeEntryJson['data']['pid'])
 
-#2: GET from https://www.toggl.com/api/v8/projects/{project_id} for project color
+projectUrl = 'https://www.toggl.com/api/v8/projects/' + projectId
+responseProject = apiRequestOpen(projectUrl)
+projectJson = json.load(responseProject)
+colorHex = str(projectJson['data']['hex_color'])
 
 #3: pair color # with actual RGB values
 
