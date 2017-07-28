@@ -17,3 +17,10 @@ def apiRequestOpen (requestUrl):
     return urllib2.urlopen(request)
 
 # Main
+#1: GET from https://www.toggl.com/api/v8/time_entries/current for project id
+
+#2: GET from https://www.toggl.com/api/v8/projects/{project_id} for project color
+
+#3: pair color # with actual RGB values
+
+#4: send RGB values to blink1
