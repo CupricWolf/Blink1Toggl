@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import urllib2, json, base64
 from subprocess import call
@@ -12,7 +12,7 @@ apiKey = b'INSERTAPIKEYHERE'
 # Helper Methods
 def apiRequestOpen (requestUrl):
     request = urllib2.Request(requestUrl)
-    basicAuthString = b'Basic ' + (apiKey + b':api_token').encode('base64')
+    basicAuthString = b'Basic ' + (apiKey + b':api_token').encode('base64').replace('\n', '')
     request.add_header('Authorization', basicAuthString)
     return urllib2.urlopen(request)
 
