@@ -17,7 +17,9 @@ def apiRequestOpen (requestUrl):
     return urllib2.urlopen(request)
 
 # Main
-#1: GET from https://www.toggl.com/api/v8/time_entries/current for project id
+responseCurrent = apiRequestOpen('https://www.toggl.com/api/v8/time_entries/current')
+timeEntryJson = json.load(responseCurrent)
+projectId = str(timeEntryJson['data']['pid'])
 
 #2: GET from https://www.toggl.com/api/v8/projects/{project_id} for project color
 
