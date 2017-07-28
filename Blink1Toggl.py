@@ -12,12 +12,14 @@ apiKey = b'INSERTAPIKEYHERE'
 # Helper Methods
 def apiRequestOpen (requestUrl):
     request = urllib2.Request(requestUrl)
-    basicAuthString = b'Basic ' + (apiKey + b':api_token').encode('base64').replace('\n', '')
+    basicAuthString = (b'Basic ' + (apiKey + b':api_token')
+                       .encode('base64').replace('\n', ''))
     request.add_header('Authorization', basicAuthString)
     return urllib2.urlopen(request)
 
 # Main
-responseCurrent = apiRequestOpen('https://www.toggl.com/api/v8/time_entries/current')
+timeEntryUrl = 'https://www.toggl.com/api/v8/time_entries/current'
+responseCurrent = apiRequestOpen(timeEntryUrl)
 timeEntryJson = json.load(responseCurrent)
 projectId = str(timeEntryJson['data']['pid'])
 
