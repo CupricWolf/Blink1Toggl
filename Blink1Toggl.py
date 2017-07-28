@@ -28,15 +28,18 @@ def hex_to_rgb(value):
 timeEntryUrl = 'https://www.toggl.com/api/v8/time_entries/current'
 responseCurrent = apiRequestOpen(timeEntryUrl)
 timeEntryJson = json.load(responseCurrent)
-projectId = str(timeEntryJson['data']['pid'])
+if (timeEntryJson['data'] != None):
+    projectId = str(timeEntryJson['data']['pid'])
 
-projectUrl = 'https://www.toggl.com/api/v8/projects/' + projectId
-responseProject = apiRequestOpen(projectUrl)
-projectJson = json.load(responseProject)
-colorHex = str(projectJson['data']['hex_color'])
+    projectUrl = 'https://www.toggl.com/api/v8/projects/' + projectId
+    responseProject = apiRequestOpen(projectUrl)
+    projectJson = json.load(responseProject)
+    colorHex = str(projectJson['data']['hex_color'])
 
-red, green, blue = hex_to_rgb(colorHex)
+    red, green, blue = hex_to_rgb(colorHex)
 
-#4: send RGB values to blink1
-call(['sudo', 'blink1-tool', '--rgb',
+    #4: send RGB values to blink1
+    call(['sudo', 'blink1-tool', '--rgb',
       str(red) + ',' + str(green) + ',' + str(blue)])
+else:
+    call(['sudo', 'blink1-tool', '--rgb', '0,0,0'])
