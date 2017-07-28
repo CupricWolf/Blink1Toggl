@@ -1,10 +1,19 @@
 #!/usr/bin/env python3
 
-import urllib2
-import json
+import urllib2, json, base64
 from subprocess import call
 
 # This script is run every minute or so by a cron job.
 # It changes the color of a Blink1 according to the color associated with a toggl project.
 
 # Variables
+apiKey = b'INSERTAPIKEYHERE'
+
+# Helper Methods
+def apiRequestOpen (requestUrl):
+    request = urllib2.Request(requestUrl)
+    basicAuthString = b'Basic ' + (apiKey + b':api_token').encode('base64')
+    request.add_header('Authorization', basicAuthString)
+    return urllib2.urlopen(request)
+
+# Main
