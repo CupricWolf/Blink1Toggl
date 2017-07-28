@@ -38,3 +38,5 @@ colorHex = str(projectJson['data']['hex_color'])
 red, green, blue = hex_to_rgb(colorHex)
 
 #4: send RGB values to blink1
+call(['sudo', 'blink1-tool', '--rgb',
+      str(red) + ',' + str(green) + ',' + str(blue)])
