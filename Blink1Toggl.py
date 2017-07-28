@@ -11,11 +11,18 @@ apiKey = b'INSERTAPIKEYHERE'
 
 # Helper Methods
 def apiRequestOpen (requestUrl):
+    """Opens url with authentication."""
     request = urllib2.Request(requestUrl)
     basicAuthString = (b'Basic ' + (apiKey + b':api_token')
                        .encode('base64').replace('\n', ''))
     request.add_header('Authorization', basicAuthString)
     return urllib2.urlopen(request)
+
+def hex_to_rgb(value):
+    """Return (red, green, blue) for the color given as #rrggbb."""
+    value = value.lstrip('#')
+    lv = len(value)
+    return tuple(int(value[i:i + lv // 3], 16) for i in range(0, lv, lv // 3))
 
 # Main
 timeEntryUrl = 'https://www.toggl.com/api/v8/time_entries/current'
