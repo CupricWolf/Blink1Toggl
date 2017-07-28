@@ -28,7 +28,7 @@ def hex_to_rgb(value):
 timeEntryUrl = 'https://www.toggl.com/api/v8/time_entries/current'
 responseCurrent = apiRequestOpen(timeEntryUrl)
 timeEntryJson = json.load(responseCurrent)
-if (timeEntryJson['data'] != None):
+if (timeEntryJson['data'] != None and 'pid' in timeEntryJson['data']):
     projectId = str(timeEntryJson['data']['pid'])
 
     projectUrl = 'https://www.toggl.com/api/v8/projects/' + projectId
