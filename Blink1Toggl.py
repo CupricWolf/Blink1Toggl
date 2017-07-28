@@ -35,6 +35,6 @@ responseProject = apiRequestOpen(projectUrl)
 projectJson = json.load(responseProject)
 colorHex = str(projectJson['data']['hex_color'])
 
-#3: pair color # with actual RGB values
+red, green, blue = hex_to_rgb(colorHex)
 
 #4: send RGB values to blink1
