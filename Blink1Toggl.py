@@ -1,22 +1,24 @@
 #!/usr/bin/env python
 
-import urllib2, json, base64
+import json
+from base64 import b64encode
+from urllib.request import Request, urlopen
 from subprocess import call
+from os import getenvb
 
 # This script is run every minute or so by a cron job.
 # It changes the color of a Blink1 according to the color associated with a toggl project.
 
 # Variables
-apiKey = b'INSERTAPIKEYHERE'
+apiKey = getenvb(b'TOGGL_API_KEY')
 
 # Helper Methods
 def apiRequestOpen (requestUrl):
     """Opens url with authentication."""
-    request = urllib2.Request(requestUrl)
-    basicAuthString = (b'Basic ' + (apiKey + b':api_token')
-                       .encode('base64').replace('\n', ''))
+    request = Request(requestUrl)
+    basicAuthString = b'Basic ' + b64encode(b'%s:%s' % (apiKey, b'api_token'))
     request.add_header('Authorization', basicAuthString)
-    return urllib2.urlopen(request)
+    return urlopen(request)
 
 def hex_to_rgb(value):
     """Return (red, green, blue) for the color given as #rrggbb."""
@@ -39,7 +41,7 @@ if (timeEntryJson['data'] != None and 'pid' in timeEntryJson['data']):
     red, green, blue = hex_to_rgb(colorHex)
 
     #4: send RGB values to blink1
-    call(['sudo', 'blink1-tool', '--rgb',
+    call(['blink1-tool', '--rgb',
       str(red) + ',' + str(green) + ',' + str(blue)])
 else:
-    call(['sudo', 'blink1-tool', '--rgb', '0,0,0'])
+    call(['blink1-tool', '--rgb', '0,0,0'])
