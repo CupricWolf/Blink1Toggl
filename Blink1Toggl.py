@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import json
+import sys
 from base64 import b64encode
 from urllib.request import Request, urlopen
 from subprocess import call
@@ -18,7 +19,7 @@ def apiRequestOpen (requestUrl):
     request = Request(requestUrl)
     basicAuthString = b'Basic ' + b64encode(b'%s:%s' % (apiKey, b'api_token'))
     request.add_header('Authorization', basicAuthString)
-    return urlopen(request)
+    return urlopen(request).read().decode('utf-8')
 
 def hex_to_rgb(value):
     """Return (red, green, blue) for the color given as #rrggbb."""
@@ -27,21 +28,26 @@ def hex_to_rgb(value):
     return tuple(int(value[i:i + lv // 3], 16) for i in range(0, lv, lv // 3))
 
 # Main
+callArgs = ['blink1-tool', '--rgb']
+if (len(sys.argv) > 1 and (sys.argv[1] == '--root' or sys.argv[1] == '--sudo')):
+    callArgs.insert(0, 'sudo')
+
 timeEntryUrl = 'https://www.toggl.com/api/v8/time_entries/current'
 responseCurrent = apiRequestOpen(timeEntryUrl)
-timeEntryJson = json.load(responseCurrent)
+timeEntryJson = json.loads(responseCurrent)
 if (timeEntryJson['data'] != None and 'pid' in timeEntryJson['data']):
     projectId = str(timeEntryJson['data']['pid'])
 
     projectUrl = 'https://www.toggl.com/api/v8/projects/' + projectId
     responseProject = apiRequestOpen(projectUrl)
-    projectJson = json.load(responseProject)
+    projectJson = json.loads(responseProject)
     colorHex = str(projectJson['data']['hex_color'])
 
     red, green, blue = hex_to_rgb(colorHex)
 
     #4: send RGB values to blink1
-    call(['blink1-tool', '--rgb',
-      str(red) + ',' + str(green) + ',' + str(blue)])
+    callArgs.append(str(red) + ',' + str(green) + ',' + str(blue))
 else:
-    call(['blink1-tool', '--rgb', '0,0,0'])
+    callArgs.append('0,0,0')
+
+call(callArgs)
